@@ -24,10 +24,13 @@ Thumbs.db
 *.sln
 
 # Include Database folder but ignore all its contents
-Database/*
+Database/**
 !Database/
 
 # Ignore Python cache files
 __pycache__/
 *.pyc
 *.pyo
+
+# Ignore .gitignore file itself
+.gitignore
