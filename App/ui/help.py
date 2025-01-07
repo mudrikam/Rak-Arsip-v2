@@ -27,7 +27,8 @@ class LoadHelpFile(ttk.LabelFrame):
         """
         Load the content of the help.md file, convert it to HTML, and display it.
         """
-        help_file_path = os.path.join(self.BASE_DIR, "README.md")  # Full path to README.md
+        # Set the help file path to be outside the App folder
+        help_file_path = os.path.join(os.path.dirname(self.BASE_DIR), "README.md")
         print(help_file_path)
 
         try:
