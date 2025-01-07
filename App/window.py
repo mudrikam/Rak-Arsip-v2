@@ -135,6 +135,14 @@ class MainWindow(tk.Tk):
         """
         self.BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+        # Cek apakah direktori "Database" ada, jika tidak buatkan
+        database_dir = os.path.join(self.BASE_DIR, "Database")
+        if not os.path.exists(database_dir):
+            os.makedirs(database_dir)
+            print(f"Direktori 'Database' telah dibuat di: {database_dir}")
+        else:
+            print(f"Direktori 'Database' sudah ada di: {database_dir}")
+
         # Buat objek style untuk notebook
         style = ttk.Style()
 
