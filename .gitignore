@@ -23,8 +23,9 @@ Thumbs.db
 *.njsproj
 *.sln
 
-# Ignore Database folder
-Database/
+# Include Database folder but ignore all its contents
+Database/*
+!Database/
 
 # Ignore Python cache files
 __pycache__/
