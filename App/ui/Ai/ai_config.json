@@ -1,0 +1,39 @@
+{
+    "models": {
+        "gpt-3.5-turbo": {
+            "name": "GPT-3.5 Turbo",
+            "api_key": [],
+            "description": "Model GPT-3.5 Turbo dari OpenAI"
+        },
+        "gpt-4": {
+            "name": "GPT-4",
+            "api_key": [],
+            "description": "Model GPT-4 dari OpenAI"
+        },
+        "gemini-pro": {
+            "name": "Gemini Pro",
+            "api_key": [],
+            "description": "Model Gemini Pro dari Google"
+        },
+        "ollama-llama2": {
+            "name": "Llama 2",
+            "api_key": [],
+            "description": "Model Llama 2 melalui Ollama (Lokal)"
+        },
+        "ollama-mistral": {
+            "name": "Mistral",
+            "api_key": [],
+            "description": "Model Mistral melalui Ollama (Lokal)"
+        },
+        "ollama-codellama": {
+            "name": "Code Llama",
+            "api_key": [],
+            "description": "Model Code Llama melalui Ollama (Lokal)" 
+        },
+        "claude-2": {
+            "name": "Claude 2",
+            "api_key": [],
+            "description": "Model Claude 2 dari Anthropic"
+        }
+    }
+}

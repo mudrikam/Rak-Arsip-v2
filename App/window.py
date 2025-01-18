@@ -51,6 +51,9 @@ from App.ui.personalize_settings import PersonalizeSettings  # Add this import
 from App.ui.disk_analyzer import DiskAnalyzer  # Add this import
 from App.config import CURRENT_VERSION, WINDOW_SIZE  # Update the import to use config
 from PIL import Image, ImageTk
+from App.ui.Ai.api_key_management import APIKeyManagement  # Add this import
+from App.ui.Ai.ai_metadata_generator import AIMetadataGenerator  # Add this import
+from App.ui.Ai.ai_prompt_generator import AIPromptGenerator  # Add this import
 
 class MainWindow(tk.Tk):
     def __init__(self):
@@ -437,7 +440,10 @@ class MainWindow(tk.Tk):
             'project_library': (ProjectLibrary, self.library_tab),
             'category_editor': (CategoryEditor, self.category_editor_tab),
             'database_backup': (DatabaseBackup, self.backup_tab),
-            'disk_analyzer': (DiskAnalyzer, self.disk_analyzer_tab)  # Add DiskAnalyzer widget
+            'disk_analyzer': (DiskAnalyzer, self.disk_analyzer_tab),
+            'api_key_manager': (APIKeyManagement, self.api_tab),
+            'ai_metadata': (AIMetadataGenerator, self.metadata_tab),
+            'ai_prompt': (AIPromptGenerator, self.prompt_tab)  # Add this line
         }
 
         for attr_name, (widget_class, parent) in widgets.items():
@@ -455,41 +461,21 @@ class MainWindow(tk.Tk):
     def _create_ai_tabs(self):
         """Create AI nested tabs"""
         self.ai_nested_notebook = ttk.Notebook(self.ai_tab)
-        self.ai_nested_notebook.pack(fill='both', expand=True, pady=(5,5))
+        self.ai_nested_notebook.pack(fill='both', expand=True, pady=(5,0))
 
         ai_nested_tab_configs = [
-            ("Segera ditambahkan...!", "ai.png", "ai_sub_tab1"),
-            ("Tunggu updatenya...!", "ai.png", "ai_sub_tab2")
+            ("Metadata", "metadata.png", "metadata_tab"),
+            ("Prompt", "prompt.png", "prompt_tab"),
+            ("Gambar", "image.png", "ai_image_tab"),
+            ("Video", "video.png", "ai_video_tab"),
+            ("Dokumen", "document.png", "ai_document_tab"),
+            ("API", "api_key.png", "api_tab")
         ]
 
         for text, icon_filename, attr_name in ai_nested_tab_configs:
             icon_path = os.path.join(self.BASE_DIR, "Img", "icon", "ui", icon_filename)
             tab = self.create_tab(self.ai_nested_notebook, text, icon_path, notebook=self.ai_nested_notebook, nested=True)
             setattr(self, attr_name, tab)
-
-            if attr_name == "ai_sub_tab1":
-                ai_features_label = ttk.Label(
-                    tab,
-                    text=(
-                        "Fitur AI yang ingin ditambahkan:\n\n"
-                        "- Deteksi Gambar dan Video\n"
-                        "- Generate Metadata Otomatis\n"
-                        "- Nama Otomatis\n"
-                        "- Generate Template\n"
-                        "- Sub Kategori Otomatis\n"
-                        "- Moderasi Teks\n"
-                        "- Pengenalan Teks (OCR)\n"
-                        "- Klasifikasi Dokumen\n"
-                        "- Ekstraksi Metadata Otomatis\n"
-                        "- Deteksi Duplikasi\n"
-                        "- Ringkasan Dokumen Otomatis\n"
-                        "- Fitur AI Berguna untuk Arsip Lainnya\n\n"
-                        "Jika kamu punya ide atau saran, \nsilakan beri tahu kami dengan membuat issue di GitHub."
-                    ),
-                    justify="left",
-                    padding=10
-                )
-                ai_features_label.pack(anchor="n", fill="both", expand=True, padx=10, pady=10)
 
     def _create_settings_tabs(self):
         """Create settings nested tabs"""
@@ -530,5 +516,3 @@ class MainWindow(tk.Tk):
                 self.project_generator._create_project_path()
             except Exception as e:
                 print(f"Could not update project path: {e}")
-
-
