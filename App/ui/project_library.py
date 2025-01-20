@@ -143,6 +143,8 @@ class ProjectLibrary(ttk.LabelFrame):
         self.tree.pack(fill=tk.BOTH, expand=True)
         self.tree.bind("<<TreeviewSelect>>", self.on_row_select)
         self.tree.bind("<Double-Button-1>", self.on_double_click)
+        # Add new binding for Ctrl+C
+        self.tree.bind("<Control-c>", self.copy_to_clipboard)
         self.load_library()
         self.selected_file = None
         self.check_for_upDates()
@@ -189,6 +191,10 @@ class ProjectLibrary(ttk.LabelFrame):
 
         # Bind the configure event to adjust widget sizes dynamically
         self.bind("<Configure>", self.on_resize)
+
+        # Add binding for Ctrl+F to focus search
+        self.bind_all("<Control-f>", self.focus_search)
+        self.tree.bind("<Control-f>", self.focus_search)
 
     def initialize_library(self):
         """Initialize directory and library file"""
@@ -457,4 +463,23 @@ class ProjectLibrary(ttk.LabelFrame):
         except Exception as e:
             print(f"Error loading icon {icon_path}: {e}")
             return None
+
+    # Add new method for clipboard functionality
+    def copy_to_clipboard(self, event=None):
+        """Copy selected project name to clipboard"""
+        selected_item = self.tree.selection()
+        if selected_item:
+            item = self.tree.item(selected_item[0])
+            project_name = item["values"][2]  # Get the "Nama" value
+            self.clipboard_clear()
+            self.clipboard_append(project_name)
+            self.main_window.update_status(f"Nama proyek '{project_name}' telah disalin ke clipboard")
+
+    # Add new method for search focus
+    def focus_search(self, event=None):
+        """Focus the search entry when Ctrl+F is pressed"""
+        self.search_entry.focus_set()
+        self.search_entry.select_range(0, tk.END)
+        # Prevent event from propagating to avoid double handling
+        return "break"
 

@@ -79,7 +79,7 @@ class APIKeyManagement(ttk.LabelFrame):
 
     def create_model_selection_frame(self):
         """Create frame for model selection and API key management"""
-        frame = ttk.LabelFrame(self, text="Input API Key", padding=(5, 5, 5, 5))
+        frame = ttk.LabelFrame(self, text="Input API Key :", padding=(5, 5, 5, 5))
         frame.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
         
         # Container for all controls with consistent padding
@@ -127,7 +127,7 @@ class APIKeyManagement(ttk.LabelFrame):
         save_button.pack(side="right", padx=5)
 
     def create_api_key_list_frame(self):  # Renamed from create_prompt_management_frame
-        frame = ttk.LabelFrame(self, text="Daftar API Key Model", padding=(5, 5, 5, 5))
+        frame = ttk.LabelFrame(self, text="Daftar API Key Model :", padding=(5, 5, 5, 5))
         frame.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
         
         # Make frame expandable

@@ -132,7 +132,7 @@ class TemplateCreator(ttk.LabelFrame):
         self.right_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, pady=0, padx=(5,0))
 
         # Template editor frame with rename controls at top
-        self.editor_frame = ttk.LabelFrame(self.right_frame, text="Edit Template:", padding=10)
+        self.editor_frame = ttk.LabelFrame(self.right_frame, text="Edit Template :", padding=10)
         self.editor_frame.pack(fill=tk.BOTH, expand=True, padx=0)
 
         # Rename controls in horizontal layout at top of editor frame
