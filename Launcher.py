@@ -363,17 +363,29 @@ def create_countdown_dialog(message: str, timeout: int = 30,
         logging.error(f"Error creating update dialog: {str(e)}")
         return False
 
+def test_internet_connection(timeout=3):
+    """Test internet connectivity by trying to reach GitHub."""
+    try:
+        urlopen('https://github.com', timeout=timeout)
+        return True
+    except:
+        logging.info("No internet connection available - skipping update check")
+        return False
+
 def check_for_updates(parent_window: Optional[tk.Tk] = None) -> None:
     """Check for updates and show dialog if update is available."""
+    if not test_internet_connection():
+        return
+
     try:
         api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
-        with urlopen(api_url) as response:
+        with urlopen(api_url, timeout=5) as response:
             data = json.loads(response.read())
             latest_version = data['tag_name'].lstrip('v')
             release_notes = data.get('body', '').strip()
             
             if latest_version > CURRENT_VERSION:
-                logging.info(f"Update available: {latest_version}")
+                logging.info(f"Update available: v{CURRENT_VERSION} -> v{latest_version}")
                 if create_countdown_dialog(
                     message="",
                     latest_version=latest_version,
@@ -382,8 +394,11 @@ def check_for_updates(parent_window: Optional[tk.Tk] = None) -> None:
                 ):
                     import webbrowser
                     webbrowser.open(f"https://github.com/{GITHUB_REPO}/releases/latest")
+            else:
+                logging.info(f"No updates available (current: v{CURRENT_VERSION})")
     except Exception as e:
-        logging.error(f"Failed to check for updates: {str(e)}")
+        logging.debug(f"Update check failed silently: {str(e)}")
+        # Silently continue - update checks are non-critical
 
 # Jalankan aplikasi
 def main():

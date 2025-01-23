@@ -10,7 +10,11 @@
         },
         "gpt-4": {
             "name": "GPT-4",
-            "api_key": [],
+            "api_key": [
+                "kjfjahf",
+                "afjwerghwegijwe",
+                "wefuwefwjeij"
+            ],
             "description": "Model GPT-4 dari OpenAI"
         },
         "gemini-pro": {

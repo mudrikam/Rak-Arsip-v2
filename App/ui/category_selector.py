@@ -129,25 +129,33 @@ class CategorySelector(ttk.LabelFrame):
         """
         Buat dan tempatkan dropdown kategori (ComboBox).
         """
-        # Buat dropdown (ComboBox) untuk kategori
         self.category_dropdown = ttk.Combobox(
             parent_frame,
             textvariable=self.category_value,
             font=("Arial", 10),
-            state="readonly",  # Buat dropdown hanya-baca
+            state="normal",  # Ubah ke normal agar bisa diketik
         )
         self.category_dropdown["values"] = self.categories
         self.category_dropdown.grid(row=0, column=0, pady=(10, 0), sticky="ew")
+        self.category_value.set("")
 
-        # Set kategori default ke None (kosong) awalnya
-        self.category_value.set("")  # Pastikan tidak ada pilihan default
-
-        # Bind event <ComboboxSelected> untuk memicu aksi pemilihan kategori
+        # Bind events
         self.category_dropdown.bind("<<ComboboxSelected>>", self._on_category_selected)
+        self.category_dropdown.bind('<KeyRelease>', self._handle_typeahead)
+        self.category_dropdown.bind('<Return>', self._handle_category_enter)  # Tambah binding untuk Enter
         self.category_value.trace("w", self._update_subcategory_state)
-
-        # Configure grid to be resizable
+        
         parent_frame.columnconfigure(0, weight=1)
+
+    def _handle_category_enter(self, event):
+        """Handle saat Enter ditekan di category dropdown."""
+        if self.category_value.get() and self.subcategory_dropdown['values']:
+            self.subcategory_dropdown.focus_set()
+            # Bersihkan nilai dan siap untuk mengetik
+            self.subcategory_value.set("")
+            # Trigger update state
+            self._update_subcategory_state()
+            return 'break'
 
     def _add_category_input(self, parent_frame):
         """
@@ -341,18 +349,15 @@ class CategorySelector(ttk.LabelFrame):
             parent_frame,
             textvariable=self.subcategory_value,
             font=("Arial", 10),
-            state="readonly",  # Buat dropdown hanya-baca
+            state="normal",  # Ubah ke normal untuk enable typing
         )
         self.subcategory_dropdown.grid(row=0, column=0, pady=(10, 0), sticky="ew")
-
-        # Set subkategori default (atau nilai default lainnya)
         self.subcategory_value.set("Pilih kategori dulu")
 
-        # Bind event <ComboboxSelected> untuk memuat daftar subkategori yang sesuai
+        # Bind events
         self.subcategory_dropdown.bind("<<ComboboxSelected>>", self._on_subcategory_selected)
-        self.subcategory_dropdown.config(state="disabled")
-
-        # Configure grid to be resizable
+        self.subcategory_dropdown.bind('<KeyRelease>', self._handle_typeahead)
+        
         parent_frame.columnconfigure(0, weight=1)
 
     def _add_subcategory_input(self, parent_frame):
@@ -488,10 +493,37 @@ class CategorySelector(ttk.LabelFrame):
         Update state of subcategory input, dropdown, and button based on category selection.
         """
         if self.category_value.get():
-            self.subcategory_dropdown.config(state="readonly")
+            self.subcategory_dropdown.config(state="normal")  # Ubah ke normal untuk enable typing
             self.new_subcategory_entry.config(state="normal")
             self.add_subcategory_button.config(state="normal")
         else:
             self.subcategory_dropdown.config(state="disabled")
             self.new_subcategory_entry.config(state="disabled")
             self.add_subcategory_button.config(state="disabled")
+
+    def _handle_typeahead(self, event):
+        """Handle autocomplete saat mengetik."""
+        if event.keysym in ('Return', 'Tab'):
+            if event.widget == self.category_dropdown:
+                return self._handle_category_enter(event)
+            return
+
+        widget = event.widget
+        typed = widget.get().lower()
+        
+        if not typed:
+            return
+            
+        values = widget.cget('values')
+        matches = [v for v in values if str(v).lower().startswith(typed)]
+        
+        if matches:
+            widget.set(matches[0])
+            widget.select_range(len(typed), tk.END)
+            widget.icursor(tk.END)
+            
+            # Trigger appropriate event handler
+            if widget == self.category_dropdown:
+                self._on_category_selected(None)
+            elif widget == self.subcategory_dropdown:
+                self._on_subcategory_selected(None)
