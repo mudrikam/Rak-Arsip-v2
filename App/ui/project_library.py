@@ -147,6 +147,10 @@ class ProjectLibrary(ttk.LabelFrame):
         # Add new binding for Ctrl+C
         self.tree.bind("<Control-c>", self.copy_to_clipboard)
         
+        # Add new bindings for Ctrl+X and Ctrl+E
+        self.tree.bind("<Control-x>", self.copy_directory)
+        self.tree.bind("<Control-e>", self.open_explorer)
+        
         # Configure Treeview style first
         style = ttk.Style()
         style.configure("Treeview", 
@@ -637,6 +641,17 @@ class ProjectLibrary(ttk.LabelFrame):
                     messagebox.showerror("Error", f"Gagal membuka explorer:\n{e}")
             else:
                 messagebox.showwarning("Periksa!", "Lokasi folder tidak ditemukan")
+        return "break"
+
+    def copy_directory(self, event=None):
+        """Copy selected project directory path to clipboard"""
+        selected_item = self.tree.selection()
+        if selected_item:
+            item = self.tree.item(selected_item[0])
+            directory = item["values"][3]  # Get the "Lokasi" value
+            self.clipboard_clear()
+            self.clipboard_append(directory)
+            self.main_window.update_status(f"Lokasi '{directory}' telah disalin ke clipboard")
         return "break"
 
     def on_hover(self, event):
