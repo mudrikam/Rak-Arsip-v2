@@ -61,7 +61,7 @@ class DiskSelector(ttk.LabelFrame):
         """Add combobox and labels with initial loading state"""
         # Combobox for drive selection
         self.disk_selector = ttk.Combobox(self, state="disabled", font=("Arial", 12), height=10, width=0)
-        self.disk_selector.grid(row=0, column=0, padx=20, pady=10, sticky="new")
+        self.disk_selector.grid(row=0, column=0, padx=10, pady=10, sticky="new")
         self.disk_selector.set("Memindai disk...")
 
         # Frame for labels

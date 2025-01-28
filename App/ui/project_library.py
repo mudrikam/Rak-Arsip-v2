@@ -530,19 +530,30 @@ class ProjectLibrary(ttk.LabelFrame):
         return "break"
 
     def find_project_image(self, project_path, project_name):
-        """Search for project_name.png in project directory and its subdirectories"""
-        image_name = f"{project_name}.png"
+        """Search for project thumbnail in multiple image formats"""
+        image_formats = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.ico', '.webp']
         
-        # First check in the main directory
-        direct_path = os.path.join(project_path, image_name)
-        if os.path.exists(direct_path):
-            return direct_path
-            
-        # Then walk through subdirectories
+        # First try to find exact match with project name
+        for format in image_formats:
+            image_name = f"{project_name}{format}"
+            direct_path = os.path.join(project_path, image_name)
+            if os.path.exists(direct_path):
+                return direct_path
+        
+        # Then look for exact match in subdirectories
         for root, _, files in os.walk(project_path):
-            if image_name in files:
-                return os.path.join(root, image_name)
-                
+            for format in image_formats:
+                image_name = f"{project_name}{format}"
+                if image_name in files:
+                    return os.path.join(root, image_name)
+        
+        # If no exact match found, find first image file in directory or subdirectories
+        for root, _, files in os.walk(project_path):
+            for file in files:
+                # Check if file has image extension
+                if any(file.lower().endswith(fmt) for fmt in image_formats):
+                    return os.path.join(root, file)
+                    
         return None
 
     def show_image_tooltip(self, event=None, hovered_item=None):

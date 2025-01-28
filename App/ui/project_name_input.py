@@ -61,7 +61,8 @@ class ProjectNameInput(ttk.LabelFrame):
             justify="left", 
             textvariable=self.project_name_value
         )
-        self.project_name_entry.place(x=10, y=10, width=self.winfo_width()-20, height=40)  # set width to 100%
+        # Menggunakan padx 10 pada kedua sisi dengan mengurangi 25 (10px kiri + 10px kanan + 5px buffer)
+        self.project_name_entry.place(x=10, y=10, width=self.winfo_width()-25, height=40)  # set width to 100%
         self.bind("<Configure>", self._resize_entry)  # bind resize event
 
         # Label untuk menampilkan nama Arsip yang telah diformat
@@ -250,5 +251,9 @@ class ProjectNameInput(ttk.LabelFrame):
             self.main_window.update_status("Lewati sanitasi, selanjutnya filter nama Arsip aku serahkan padamu!")
 
     def _resize_entry(self, event):
-        """Resize the entry dynamically."""
-        self.project_name_entry.place_configure(width=event.width-20)
+        """
+        Resize the entry dynamically with consistent padding.
+        Ensure 10px padding on both left and right sides.
+        """
+        # Mengurangi lebar frame dengan total padding (kiri 10 + kanan 10 + 5px buffer = 25)
+        self.project_name_entry.place_configure(width=event.width-25)
